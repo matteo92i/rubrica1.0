@@ -6,18 +6,18 @@ use yii\grid\ActionColumn;
 use yii\grid\GridView;
 
 /* @var $this yii\web\View */
-/* @var $searchModel app\models\ContattiSearch */
+/* @var $searchModel app\models\TagsSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Contattis';
+$this->title = 'Tags';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="contatti-index">
+<div class="tags-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a('Create Contatti', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Create Tags', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
@@ -28,26 +28,13 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'contatti_id',
+            'id',
             'nome',
-            'cognome',
-            'numero',
-            [
-                'label' => 'Tag',
-                'value' => function ($model){
-                    $return = '';
-                    if(!is_null($model->tag)) {
-                        foreach ($model->tag as $tag){
-                            $return .= $tag->nome.', ';
-                        }
-                    }
-                    return $return;
-                }
-            ],
+            'contatto.cognome',
             [
                 'class' => ActionColumn::className(),
                 'urlCreator' => function ($action, $model, $key, $index, $column) {
-                    return Url::toRoute([$action, 'contatti_id' => $model->contatti_id]);
+                    return Url::toRoute([$action, 'id' => $model->id]);
                  }
             ],
         ],

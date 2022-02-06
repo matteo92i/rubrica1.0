@@ -2,17 +2,16 @@
 
 namespace app\controllers;
 
-use app\models\Contatti;
 use app\models\Tags;
-use app\models\ContattiSearch;
+use app\models\TagsSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * ContattiController implements the CRUD actions for Contatti model.
+ * TagsController implements the CRUD actions for Tags model.
  */
-class ContattiController extends Controller
+class TagsController extends Controller
 {
     /**
      * @inheritDoc
@@ -33,13 +32,13 @@ class ContattiController extends Controller
     }
 
     /**
-     * Lists all Contatti models.
+     * Lists all Tags models.
      *
      * @return string
      */
     public function actionIndex()
     {
-        $searchModel = new ContattiSearch();
+        $searchModel = new TagsSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
 
         return $this->render('index', [
@@ -49,39 +48,30 @@ class ContattiController extends Controller
     }
 
     /**
-     * Displays a single Contatti model.
-     * @param int $contatti_id ID
+     * Displays a single Tags model.
+     * @param int $id ID
      * @return string
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionView($contatti_id)
+    public function actionView($id)
     {
         return $this->render('view', [
-            'model' => $this->findModel($contatti_id),
+            'model' => $this->findModel($id),
         ]);
     }
 
     /**
-     * Creates a new Contatti model.
+     * Creates a new Tags model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return string|\yii\web\Response
      */
     public function actionCreate()
     {
-        $model = new Contatti();
+        $model = new Tags();
 
         if ($this->request->isPost) {
             if ($model->load($this->request->post()) && $model->save()) {
-                //TODO: Esplodere $model->tag per le virgole e Salvare i tags sulla tabella tags con id $model->id
-                $explode = explode(',',$model->tags);
-
-                foreach( $explode as $singleTag){
-                    $tag = new Tags();
-                    $tag->nome =  $singleTag;
-                    $tag->contatto_id = $model->contatti_id;
-                    $tag->save();
-                }
-                return $this->redirect(['view', 'contatti_id' => $model->contatti_id]);
+                return $this->redirect(['view', 'id' => $model->id]);
             }
         } else {
             $model->loadDefaultValues();
@@ -93,28 +83,18 @@ class ContattiController extends Controller
     }
 
     /**
-     * Updates an existing Contatti model.
+     * Updates an existing Tags model.
      * If update is successful, the browser will be redirected to the 'view' page.
-     * @param int $contatti_id ID
+     * @param int $id ID
      * @return string|\yii\web\Response
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionUpdate($contatti_id)
+    public function actionUpdate($id)
     {
-        $model = $this->findModel($contatti_id);
+        $model = $this->findModel($id);
 
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            //TODO: Esplodere $model->tag per le virgole e Salvare i tags sulla tabella tags con id $model->id
-            $explode = explode(',',$model->tags);
-
-            Tags::deleteAll(['contatto_id' => $model->contatti_id]);
-            foreach( $explode as $singleTag){
-                $tag = new Tags();
-                $tag->nome =  $singleTag;
-                $tag->contatto_id = $model->contatti_id;
-                $tag->save();
-            }
-            return $this->redirect(['view', 'contatti_id' => $model->contatti_id]);
+            return $this->redirect(['view', 'id' => $model->id]);
         }
 
         return $this->render('update', [
@@ -123,29 +103,29 @@ class ContattiController extends Controller
     }
 
     /**
-     * Deletes an existing Contatti model.
+     * Deletes an existing Tags model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param int $contatti_id ID
+     * @param int $id ID
      * @return \yii\web\Response
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionDelete($contatti_id)
+    public function actionDelete($id)
     {
-        $this->findModel($contatti_id)->delete();
+        $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
     }
 
     /**
-     * Finds the Contatti model based on its primary key value.
+     * Finds the Tags model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param int $contatti_id ID
-     * @return Contatti the loaded model
+     * @param int $id ID
+     * @return Tags the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
-    protected function findModel($contatti_id)
+    protected function findModel($id)
     {
-        if (($model = Contatti::findOne(['contatti_id' => $contatti_id])) !== null) {
+        if (($model = Tags::findOne(['id' => $id])) !== null) {
             return $model;
         }
 
